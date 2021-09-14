@@ -35,6 +35,13 @@ type TypedIMDS struct {
 	EC2MetadataIface
 }
 
+// NewTypedIMDS returns a typed wrapper around raw untyped IMDS SDK API.
+func NewTypedIMDS(inner EC2MetadataIface) TypedIMDS {
+	return TypedIMDS{
+		EC2MetadataIface: inner,
+	}
+}
+
 func (imds TypedIMDS) getValue(ctx context.Context, key string) (string, error) {
 	data, err := imds.GetMetadataWithContext(ctx, key)
 	if err != nil {

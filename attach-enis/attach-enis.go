@@ -90,7 +90,7 @@ func doSetup(ctx context.Context) error {
 // function.  Currently, ASG rejects launchtemplates that create more
 // than one interface, however. :(
 func attachENIs(ctx context.Context, ec2Metadata metadata.EC2MetadataIface, ec2Svc ec2iface.EC2API, addrFamily int) error {
-	imds := metadata.TypedIMDS{metadata.NewCachedIMDS(ec2Metadata)}
+	imds := metadata.NewTypedIMDS(metadata.NewCachedIMDS(ec2Metadata))
 
 	// NB: This is ~carefully written to make _no_ AWS API calls
 	// unless necessary (excluding IMDS).
@@ -268,12 +268,12 @@ func attachENIs(ctx context.Context, ec2Metadata metadata.EC2MetadataIface, ec2S
 			// Best-effort cleanup.  No error checking, no context.
 			if aid != nil {
 				log.Printf("Attempting to detach ENI %s", *id)
-				ec2Svc.DetachNetworkInterface(&ec2.DetachNetworkInterfaceInput{
+				_, _ = ec2Svc.DetachNetworkInterface(&ec2.DetachNetworkInterfaceInput{
 					AttachmentId: aid,
 				})
 			}
 			log.Printf("Attempting to delete ENI %s", *id)
-			ec2Svc.DeleteNetworkInterface(&ec2.DeleteNetworkInterfaceInput{
+			_, _ = ec2Svc.DeleteNetworkInterface(&ec2.DeleteNetworkInterfaceInput{
 				NetworkInterfaceId: id,
 			})
 		}
@@ -328,7 +328,7 @@ func attachENIs(ctx context.Context, ec2Metadata metadata.EC2MetadataIface, ec2S
 			waitDuration = time.Duration(float64(waitDuration) * 1.4)
 
 			// Invalidate IMDS cache
-			imds = metadata.TypedIMDS{metadata.NewCachedIMDS(ec2Metadata)}
+			imds = metadata.NewTypedIMDS(metadata.NewCachedIMDS(ec2Metadata))
 			switch addrFamily {
 			case 4:
 				getIPs = imds.GetLocalIPv4s

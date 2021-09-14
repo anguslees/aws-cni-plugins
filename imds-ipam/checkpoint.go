@@ -28,44 +28,6 @@ func (c NullCheckpoint) Restore(into interface{}) error {
 	return os.ErrNotExist
 }
 
-// TestCheckpoint maintains a snapshot in memory.
-type TestCheckpoint struct {
-	Error error
-	Data  interface{}
-}
-
-// NewTestCheckpoint creates a new TestCheckpoint.
-func NewTestCheckpoint(data interface{}) *TestCheckpoint {
-	return &TestCheckpoint{Data: data}
-}
-
-// Checkpoint implements the Checkpointer interface.
-func (c *TestCheckpoint) Checkpoint(data interface{}) error {
-	if c.Error != nil {
-		return c.Error
-	}
-	c.Data = data
-	return nil
-}
-
-// Restore implements the Checkpointer interface.
-func (c *TestCheckpoint) Restore(into interface{}) error {
-	if c.Error != nil {
-		return c.Error
-	}
-	// `into` is always a pointer to interface{}, but we can't
-	// actually make the Restore() function *interface{}, because
-	// that doesn't match the (widely used) `encoding.Unmarshal`
-	// interface :(
-	// Round trip through json strings instead because copying is
-	// hard.
-	buf, err := json.Marshal(c.Data)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(buf, into)
-}
-
 // JSONFile is a checkpointer that writes to a JSON file
 type JSONFile struct {
 	path string

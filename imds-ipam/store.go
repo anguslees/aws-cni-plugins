@@ -46,7 +46,6 @@ func NewStore(dir string) Store {
 	return Store{
 		dir:          dir,
 		checkpointer: NewJSONFile(filepath.Join(dir, storefile)),
-		data:         make([]StoreRow, 0),
 	}
 }
 

@@ -74,7 +74,7 @@ func _main() error {
 
 	glog.V(4).Infof("Input is:\n%s", string(data))
 
-	output, err := vm.EvaluateSnippet(filename, string(data))
+	output, err := vm.EvaluateAnonymousSnippet(filename, string(data))
 	if err != nil {
 		return err
 	}

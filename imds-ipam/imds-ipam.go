@@ -137,7 +137,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 		return err
 	}
 	awsConfig := aws.NewConfig()
-	imds := metadata.TypedIMDS{metadata.NewCachedIMDS(ec2metadata.New(session, awsConfig))}
+	imds := metadata.NewTypedIMDS(metadata.NewCachedIMDS(ec2metadata.New(session, awsConfig)))
 
 	result := &cniv1.Result{}
 
@@ -185,7 +185,7 @@ func cmdDel(args *skel.CmdArgs) error {
 		return err
 	}
 	awsConfig := aws.NewConfig()
-	imds := metadata.TypedIMDS{metadata.NewCachedIMDS(ec2metadata.New(session, awsConfig))}
+	imds := metadata.NewTypedIMDS(metadata.NewCachedIMDS(ec2metadata.New(session, awsConfig)))
 
 	store := NewStore(filepath.Join(ipamConf.DataDir, netConf.Name))
 	if err := store.Open(); err != nil {
