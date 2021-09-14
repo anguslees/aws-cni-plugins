@@ -1,0 +1,106 @@
+---
+"apiVersion": "apps/v1"
+"kind": "DaemonSet"
+"metadata":
+  "labels":
+    "k8s-app": "aws-node"
+  "name": "aws-node"
+  "namespace": "kube-system"
+"spec":
+  "selector":
+    "matchLabels":
+      "k8s-app": "aws-node"
+  "template":
+    "metadata":
+      "labels":
+        "k8s-app": "aws-node"
+    "spec":
+      "affinity":
+        "nodeAffinity":
+          "requiredDuringSchedulingIgnoredDuringExecution":
+            "nodeSelectorTerms":
+            - "matchExpressions":
+              - "key": "kubernetes.io/os"
+                "operator": "In"
+                "values":
+                - "linux"
+              - "key": "kubernetes.io/arch"
+                "operator": "In"
+                "values":
+                - "amd64"
+                - "arm64"
+              - "key": "eks.amazonaws.com/compute-type"
+                "operator": "NotIn"
+                "values":
+                - "fargate"
+      "automountServiceAccountToken": false
+      "containers":
+      - "image": "public.ecr.aws/eks-distro/kubernetes/pause:3.2"
+        "name": "pause"
+      "hostNetwork": true
+      "initContainers":
+      - "command":
+        - "/bin/sh"
+        - "-x"
+        - "-e"
+        - "-c"
+        - |
+          cd /usr/local/bin
+          attach-enis -ipv6=true -ipv4=false
+          install -m755 imds-ipam imds-ptp host-local bandwidth portmap ptp egress-v4 /opt/cni/bin/
+          json-tmpl --file=- -v=4 --logtostderr >/etc/cni/net.d/10-aws.conflist <<'EOF'
+          // Modify as necessary.
+          
+          local mtu = 9001;
+          
+          {
+            cniVersion: "0.3.1",
+            name: "aws-vpc",
+            plugins: [
+              {
+                type: "imds-ptp",
+                mtu: mtu,
+                ipam: {
+                  type: "imds-ipam",
+                  routes: [{dst: "0.0.0.0/0"}],
+                  dataDir: "/run/cni/ipam",
+                },
+              },
+              {
+                type: "portmap",
+                capabilities: {portMappings: true},
+              },
+              {
+                type: "bandwidth",
+                capabilities: {bandwidth: true},
+              },
+            ],
+          }
+          EOF
+        "image": "ghcr.io/anguslees/aws-cni-plugins:latest"
+        "name": "install"
+        "volumeMounts":
+        - "mountPath": "/opt/cni/bin"
+          "name": "cni-bin-dir"
+        - "mountPath": "/etc/cni/net.d"
+          "name": "cni-net-dir"
+      "priorityClassName": "system-node-critical"
+      "terminationGracePeriodSeconds": 1
+      "tolerations":
+      - "effect": "NoSchedule"
+        "key": "node.kubernetes.io/not-ready"
+        "operator": "Exists"
+      "volumes":
+      - "hostPath":
+          "path": "/opt/cni/bin"
+          "type": "DirectoryOrCreate"
+        "name": "cni-bin-dir"
+      - "hostPath":
+          "path": "/etc/cni/net.d"
+          "type": "DirectoryOrCreate"
+        "name": "cni-net-dir"
+  "updateStrategy":
+    "rollingUpdate":
+      "maxUnavailable": "10%"
+    "type": "RollingUpdate"
+...

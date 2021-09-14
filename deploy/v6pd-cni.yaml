@@ -1,0 +1,151 @@
+---
+"apiVersion": "apps/v1"
+"kind": "DaemonSet"
+"metadata":
+  "labels":
+    "k8s-app": "aws-node"
+  "name": "aws-node"
+  "namespace": "kube-system"
+"spec":
+  "selector":
+    "matchLabels":
+      "k8s-app": "aws-node"
+  "template":
+    "metadata":
+      "labels":
+        "k8s-app": "aws-node"
+    "spec":
+      "affinity":
+        "nodeAffinity":
+          "requiredDuringSchedulingIgnoredDuringExecution":
+            "nodeSelectorTerms":
+            - "matchExpressions":
+              - "key": "kubernetes.io/os"
+                "operator": "In"
+                "values":
+                - "linux"
+              - "key": "kubernetes.io/arch"
+                "operator": "In"
+                "values":
+                - "amd64"
+                - "arm64"
+              - "key": "eks.amazonaws.com/compute-type"
+                "operator": "NotIn"
+                "values":
+                - "fargate"
+      "automountServiceAccountToken": false
+      "containers":
+      - "image": "public.ecr.aws/eks-distro/kubernetes/pause:3.2"
+        "name": "pause"
+      "hostNetwork": true
+      "initContainers":
+      - "command":
+        - "/bin/sh"
+        - "-x"
+        - "-e"
+        - "-c"
+        - |
+          token=$(curl -q --retry 5 --fail -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 600" http://169.254.169.254/latest/api/token)
+          metadata() {
+            curl -q --retry 5 --fail -H "X-aws-ec2-metadata-token: $token" http://169.254.169.254/2019-10-01/meta-data/$1
+          }
+          
+          mac=$(metadata mac)
+          if [ -n "$(metadata network/interfaces/macs/$mac/ipv6-prefix)" ]; then
+            exit 0
+          fi
+          
+          ifid=$(metadata network/interfaces/macs/$mac/interface-id)
+          aws ec2 assign-ipv6-addresses --network-interface-id $ifid --ipv6-prefix-count 1
+          while [ -z "$(metadata network/interfaces/macs/$mac/ipv6-prefix)" ]; do
+            sleep 1
+          done
+        "image": "public.ecr.aws/bitnami/aws-cli:2.2.37"
+        "name": "attach"
+      - "command":
+        - "/bin/sh"
+        - "-x"
+        - "-e"
+        - "-c"
+        - |
+          cd /usr/local/bin
+          install -m755 host-local bandwidth portmap ptp egress-v4 /opt/cni/bin/
+          json-tmpl --file=- -v=4 --logtostderr >/etc/cni/net.d/10-aws.conflist <<'EOF'
+          // Modify as necessary.
+          
+          local metadata = std.native("metadata");
+          local primaryMac = metadata("mac");
+          
+          local v6prefix = metadata("network/interfaces/macs/%s/ipv6-prefix" % primaryMac);
+          
+          local mtu = 9001;
+          
+          {
+            cniVersion: "0.3.1",
+            name: "aws-ipv6-pd",
+            plugins: [
+              {
+                type: "ptp",
+                mtu: mtu,
+                ipam: {
+                  type: "host-local",
+                  ranges: [[{
+                    subnet: v6prefix,
+                    //FIXME: rangeStart: .4, (defaults to .2)
+                    //rangeEnd: something big (defaults to .255)
+                  }]],
+                  routes: [{dst: "::/0"}],
+                  dataDir: "/run/cni/v6pd/ipam",
+                },
+              },
+              {
+                type: "egress-v4",
+                mtu: mtu,
+                snatIP: metadata("local-ipv4"),
+                ipam: {
+                  type: "host-local",
+                  ranges: [[{
+                    subnet: "100.64.0.0/10",
+                  }]],
+                  routes: [{dst: "0.0.0.0/0"}],
+                  dataDir: "/run/cni/v6pd/egress-v4-ipam",
+                },
+              },
+              {
+                type: "portmap",
+                capabilities: {portMappings: true},
+              },
+              {
+                type: "bandwidth",
+                capabilities: {bandwidth: true},
+              },
+            ],
+          }
+          EOF
+        "image": "ghcr.io/anguslees/aws-cni-plugins:latest"
+        "name": "install"
+        "volumeMounts":
+        - "mountPath": "/opt/cni/bin"
+          "name": "cni-bin-dir"
+        - "mountPath": "/etc/cni/net.d"
+          "name": "cni-net-dir"
+      "priorityClassName": "system-node-critical"
+      "terminationGracePeriodSeconds": 1
+      "tolerations":
+      - "effect": "NoSchedule"
+        "key": "node.kubernetes.io/not-ready"
+        "operator": "Exists"
+      "volumes":
+      - "hostPath":
+          "path": "/opt/cni/bin"
+          "type": "DirectoryOrCreate"
+        "name": "cni-bin-dir"
+      - "hostPath":
+          "path": "/etc/cni/net.d"
+          "type": "DirectoryOrCreate"
+        "name": "cni-net-dir"
+  "updateStrategy":
+    "rollingUpdate":
+      "maxUnavailable": "10%"
+    "type": "RollingUpdate"
+...

@@ -1,0 +1,36 @@
+name: check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  golangci:
+    name: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          stable: 'true'
+      - run: go version
+      - name: go fmt
+        run: if [ "$(gofmt -s -d . | tee fmt.out | wc -l)" -gt 0 ]; then cat fmt.out; exit 1; fi
+      - name: go test
+        run: make test
