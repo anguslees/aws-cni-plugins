@@ -33,4 +33,4 @@ jobs:
       - name: go fmt
         run: if [ "$(gofmt -s -d . | tee fmt.out | wc -l)" -gt 0 ]; then cat fmt.out; exit 1; fi
       - name: go test
-        run: make test
+        run: make test ROOT_CMD=sudo
