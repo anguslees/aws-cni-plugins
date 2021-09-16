@@ -32,7 +32,7 @@ type IMDSAllocator struct {
 func NewIMDSAllocator(imds metadata.EC2MetadataIface, store *Store) *IMDSAllocator {
 	return &IMDSAllocator{
 		store:  store,
-		client: metadata.TypedIMDS{imds},
+		client: metadata.NewTypedIMDS(imds),
 	}
 }
 

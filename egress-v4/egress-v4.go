@@ -315,7 +315,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 	// Invoke ipam del if err to avoid ip leak
 	defer func() {
 		if err != nil {
-			ipam.ExecDel(netConf.IPAM.Type, args.StdinData)
+			_ = ipam.ExecDel(netConf.IPAM.Type, args.StdinData)
 		}
 	}()
 

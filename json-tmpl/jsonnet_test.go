@@ -57,7 +57,7 @@ func TestJsonnetIMDS(t *testing.T) {
 	}
 
 	for i, test := range tests {
-		json, err := vm.EvaluateSnippet(
+		json, err := vm.EvaluateAnonymousSnippet(
 			fmt.Sprintf("<test %d>", i),
 			test.in,
 		)
@@ -78,7 +78,7 @@ func TestJsonnetExtvars(t *testing.T) {
 	}
 	vm := JsonnetVM(metadata.FakeIMDS(nil), vars)
 
-	json, err := vm.EvaluateSnippet("<test>", "'foo is ' + std.extVar('foo')")
+	json, err := vm.EvaluateAnonymousSnippet("<test>", "'foo is ' + std.extVar('foo')")
 	if assert.NoError(t, err) {
 		assert.Equal(t, "\"foo is bar\"\n", json)
 	}

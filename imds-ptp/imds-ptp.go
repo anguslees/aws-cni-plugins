@@ -235,7 +235,7 @@ func setupHostVeth(vethName string, result *cniv1.Result) error {
 func setupHostEniIface(ec2Metadata metadata.EC2MetadataIface, procSys procsys.ProcSys, mtu int, vethName string, eniMAC string, ipVersion int) error {
 	ctx := context.TODO()
 
-	imds := metadata.TypedIMDS{ec2Metadata}
+	imds := metadata.NewTypedIMDS(ec2Metadata)
 
 	getIPs := imds.GetLocalIPv4s
 	getSubnet := imds.GetSubnetIPv4CIDRBlock
@@ -481,7 +481,7 @@ func setupHostEniIface(ec2Metadata metadata.EC2MetadataIface, procSys procsys.Pr
 func setupHostEniPodRoute(ec2Metadata metadata.EC2MetadataIface, vethName string, eniMAC string, ipc *cniv1.IPConfig) error {
 	ctx := context.TODO()
 
-	imds := metadata.TypedIMDS{ec2Metadata}
+	imds := metadata.NewTypedIMDS(ec2Metadata)
 
 	maskLen := 128
 	if ipc.Address.IP.To4() != nil {
@@ -537,7 +537,7 @@ func setupHostEniPodRoute(ec2Metadata metadata.EC2MetadataIface, vethName string
 func setupHostEni(ec2Metadata metadata.EC2MetadataIface, procSys procsys.ProcSys, mtu int, vethName string, result *cniv1.Result) error {
 	ctx := context.TODO()
 
-	imds := metadata.TypedIMDS{ec2Metadata}
+	imds := metadata.NewTypedIMDS(ec2Metadata)
 
 	ifaces, err := net.Interfaces()
 	if err != nil {
@@ -727,7 +727,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 	// Invoke ipam del if err to avoid ip leak
 	defer func() {
 		if err != nil {
-			ipam.ExecDel(netConf.IPAM.Type, args.StdinData)
+			_ = ipam.ExecDel(netConf.IPAM.Type, args.StdinData)
 		}
 	}()
 
