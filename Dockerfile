@@ -41,6 +41,7 @@ RUN \
     apt-get update -qy; \
     apt-get install -qy wget
 
+# renovate: datasource=github-releases depName=containernetworking/plugins 
 ENV CNIPLUGINS_VERSION=v1.0.1
 
 WORKDIR /build
