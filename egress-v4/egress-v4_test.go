@@ -191,7 +191,7 @@ var _ = Describe("egress-v4 Operations", func() {
 			err := targetNs.Do(func(ns.NetNS) error {
 				defer GinkgoRecover()
 
-				hostVeth, contVeth, err := ip.SetupVeth(IfName, Mtu, originalNs)
+				hostVeth, contVeth, err := ip.SetupVeth(IfName, Mtu, "", originalNs)
 				Expect(err).NotTo(HaveOccurred())
 
 				result.Interfaces = []*cniv1.Interface{
@@ -270,7 +270,7 @@ var _ = Describe("egress-v4 Operations", func() {
 					defer GinkgoRecover()
 
 					var err error
-					internetVeth, hostVeth, err = ip.SetupVeth("eth0", Mtu, internetNs)
+					internetVeth, hostVeth, err = ip.SetupVeth("eth0", Mtu, "", internetNs)
 					Expect(err).NotTo(HaveOccurred())
 
 					veth, err := netlink.LinkByName(hostVeth.Name)
