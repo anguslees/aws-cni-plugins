@@ -99,7 +99,7 @@ func setupContainerVeth(netns ns.NetNS, ifName string, mtu int, pr *cniv1.Result
 	containerInterface := &cniv1.Interface{}
 
 	err := netns.Do(func(hostNS ns.NetNS) error {
-		hostVeth, contVeth0, err := ip.SetupVeth(ifName, mtu, hostNS)
+		hostVeth, contVeth0, err := ip.SetupVeth(ifName, mtu, "", hostNS)
 		if err != nil {
 			return err
 		}
