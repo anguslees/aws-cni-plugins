@@ -17,5 +17,5 @@ require (
 	github.com/safchain/ethtool v0.0.0-20210803160452-9aa261dae9b1 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/vishvananda/netlink v1.1.1-0.20210330154013-f5de75959ad5
-	golang.org/x/sys v0.0.0-20211003122950-b1ebd4e1001c
+	golang.org/x/sys v0.0.0-20211004093028-2c5d950f24ef
 )
