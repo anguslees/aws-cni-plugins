@@ -11,7 +11,7 @@ require (
 	github.com/google/go-jsonnet v0.17.0
 	github.com/j-keck/arping v1.0.2
 	github.com/kr/pretty v0.2.1 // indirect
-	github.com/onsi/ginkgo v1.16.4
+	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.16.0
 	github.com/pkg/errors v0.9.1
 	github.com/safchain/ethtool v0.0.0-20210803160452-9aa261dae9b1 // indirect
