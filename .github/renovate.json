@@ -2,5 +2,14 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
         "local>anguslees/renovate-config"
+    ],
+    "automergeType": "pr",
+    "packageRules": [
+        {
+            "description": "Automerge trivial updates",
+            "matchUpdateTypes": ["patch", "digest", "lockFileMaintenance"],
+            "automerge": false,
+            "addLabels": ["automerge"]
+        }
     ]
 }
