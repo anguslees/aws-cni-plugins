@@ -38,7 +38,7 @@ jobs:
             type=schedule
             type=ref,event=branch
             type=semver,pattern={{version}}
-            type=semver,pattern={{major}.{{minor}}
+            type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@27d0a4f181a40b142cce983c5393082c365d1480 # renovate: tag=v1
