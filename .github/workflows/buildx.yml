@@ -48,7 +48,7 @@ jobs:
 
       - name: Login
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9 # renovate: tag=v1
+        uses: docker/login-action@d9927c4142fff0909d33f9d37fa4a751106fe18e # renovate: tag=v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
