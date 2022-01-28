@@ -11,7 +11,7 @@ require (
 	github.com/google/go-jsonnet v0.18.0
 	github.com/j-keck/arping v1.0.2
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.16.0
+	github.com/onsi/gomega v1.18.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
 	github.com/vishvananda/netlink v1.1.1-0.20210330154013-f5de75959ad5
