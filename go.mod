@@ -15,5 +15,5 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
 	github.com/vishvananda/netlink v1.1.1-0.20210330154013-f5de75959ad5
-	golang.org/x/sys v0.0.0-20220223155357-96fed51e1446
+	golang.org/x/sys v0.0.0-20220224003255-dbe011f71a99
 )
