@@ -61,7 +61,7 @@ RUN \
 RUN chown -R root:root /out
 RUN chmod -R u=rwX,go=rX /out
 
-FROM alpine:3.15.1@sha256:f8bbaca2b7b3579cc40fce15adac0b4d858918d36d9e3dc0827bad879799f153
+FROM alpine:3.15.1@sha256:b647f54d9cbfcba8d7450adbc4f4c43ebf1647f14289674b508fa7304e3ff303
 
 COPY --from=cniplugins /out/* /usr/local/bin/
 COPY --from=builder /out/* /usr/local/bin/
