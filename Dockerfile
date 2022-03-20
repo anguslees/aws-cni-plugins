@@ -1,5 +1,5 @@
 #syntax=docker/dockerfile:1.2
-FROM --platform=$BUILDPLATFORM golang:1.17.8@sha256:b4575a2197918278ecc76dd6f323cc8e5b1a934531d11032196cf049593652e5 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.17.8@sha256:fdc8c53f80fabdc23fdbc620486735ca780a5a486cd4534296a69ddb5b1e98dc AS builder
 
 WORKDIR /build
 
