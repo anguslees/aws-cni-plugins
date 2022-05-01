@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e # tag=v2
       - name: Set up Go
-        uses: actions/setup-go@bfdd3570ce990073878bf10f6b2d79082de49492 # renovate: tag=v2
+        uses: actions/setup-go@f6164bd8c8acb4a71fb2791a8b6c4024ff038dab # tag=v3
         with:
           stable: 'true'
       - run: go version
