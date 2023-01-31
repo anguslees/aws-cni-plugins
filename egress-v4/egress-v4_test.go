@@ -35,7 +35,7 @@ import (
 
 	"github.com/anguslees/aws-cni-plugins/internal/tcpdump"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
