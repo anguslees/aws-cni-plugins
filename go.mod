@@ -10,8 +10,8 @@ require (
 	github.com/golang/glog v1.0.0
 	github.com/google/go-jsonnet v0.19.1
 	github.com/j-keck/arping v1.0.3
-	github.com/onsi/ginkgo/v2 v2.8.3
-	github.com/onsi/gomega v1.27.0
+	github.com/onsi/ginkgo/v2 v2.8.4
+	github.com/onsi/gomega v1.27.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.2
 	github.com/vishvananda/netlink v1.2.1-beta.2.0.20221107222636-d3c0a2caa559
