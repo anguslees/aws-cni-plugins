@@ -24,10 +24,10 @@ import (
 // Tcpdump runs tcpdump asynchronously in the current network namespace.
 //
 // Useful debugging tool. Example usage:
-//    err = originalNs.Do(func(ns.NetNS) error {
+// err = originalNs.Do(func(ns.NetNS) error {
 //        return Tcpdump(ctx, GinkgoWriter, "original", "any")
-//    })
-//    Expect(err).NotTo(HaveOccurred())
+// })
+// Expect(err).NotTo(HaveOccurred())
 func Tcpdump(ctx context.Context, w io.Writer, label, ifname string) error {
 	copy := func(r io.Reader) {
 		buf := bufio.NewReader(r)
