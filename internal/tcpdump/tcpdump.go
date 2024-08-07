@@ -29,7 +29,6 @@ import (
 //	       return Tcpdump(ctx, GinkgoWriter, "original", "any")
 //	})
 //	Expect(err).NotTo(HaveOccurred())
-//
 func Tcpdump(ctx context.Context, w io.Writer, label, ifname string) error {
 	copy := func(r io.Reader) {
 		buf := bufio.NewReader(r)
