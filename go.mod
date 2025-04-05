@@ -1,6 +1,8 @@
 module github.com/anguslees/aws-cni-plugins
 
-go 1.19
+go 1.23.0
+
+toolchain go1.24.2
 
 require (
 	github.com/aws/aws-sdk-go v1.44.312
@@ -15,7 +17,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
 	github.com/vishvananda/netlink v1.2.1-beta.2.0.20221107222636-d3c0a2caa559
-	golang.org/x/sys v0.5.0
+	golang.org/x/sys v0.32.0
 )
 
 require (
