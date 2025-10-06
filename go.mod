@@ -3,7 +3,7 @@ module github.com/anguslees/aws-cni-plugins
 go 1.21
 
 require (
-	github.com/aws/aws-sdk-go v1.44.312
+	github.com/aws/aws-sdk-go v1.55.8
 	github.com/containernetworking/cni v1.3.0
 	github.com/containernetworking/plugins v1.2.0
 	github.com/coreos/go-iptables v0.8.0
