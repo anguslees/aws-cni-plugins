@@ -169,8 +169,6 @@ var _ = Describe("egress-v4 Operations", func() {
 		hostIP := net.ParseIP("2001:db8:1::1")
 
 		BeforeEach(func() {
-			// In some test environments (eg, docker-in-docker on GitHub Actions),
-			// IPv6 may not be enabled.
 			if _, err := os.Stat("/proc/sys/net/ipv6"); os.IsNotExist(err) {
 				Skip("IPv6 not available in this environment")
 			}
@@ -283,6 +281,8 @@ var _ = Describe("egress-v4 Operations", func() {
 
 					veth, err := netlink.LinkByName(hostVeth.Name)
 					Expect(err).NotTo(HaveOccurred())
+
+					Expect(netlink.LinkSetUp(veth)).To(Succeed())
 
 					Expect(netlink.AddrAdd(veth, &netlink.Addr{
 						IPNet: &primaryIP,
