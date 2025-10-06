@@ -168,6 +168,14 @@ var _ = Describe("egress-v4 Operations", func() {
 		contIP := net.ParseIP("2001:db8:1::100")
 		hostIP := net.ParseIP("2001:db8:1::1")
 
+		BeforeEach(func() {
+			// In some test environments (eg, docker-in-docker on GitHub Actions),
+			// IPv6 may not be enabled.
+			if _, err := os.Stat("/proc/sys/net/ipv6"); os.IsNotExist(err) {
+				Skip("IPv6 not available in this environment")
+			}
+		})
+
 		JustBeforeEach(func() {
 			contIfIdx := 1 // contVeth
 			result := cniv1.Result{

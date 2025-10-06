@@ -12,7 +12,7 @@
 # language governing permissions and limitations under the License.
 #
 
-GO = go
+GO ?= $(shell which go)
 
 # Tests in cmd/egress-v4 require NET_ADMIN/SYS_ADMIN.
 # 'unshare' provides this in a user namespace, otherwise 'sudo' will give "real" root.
