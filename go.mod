@@ -7,7 +7,7 @@ require (
 	github.com/containernetworking/cni v1.3.0
 	github.com/containernetworking/plugins v1.2.0
 	github.com/coreos/go-iptables v0.8.0
-	github.com/golang/glog v1.0.0
+	github.com/golang/glog v1.2.5
 	github.com/google/go-jsonnet v0.19.1
 	github.com/j-keck/arping v1.0.3
 	github.com/onsi/ginkgo/v2 v2.20.1
