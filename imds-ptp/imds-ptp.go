@@ -319,8 +319,9 @@ func setupHostEniIface(ec2Metadata metadata.EC2MetadataIface, procSys procsys.Pr
 	}
 	rule = netlink.NewRule()
 	rule.Priority = rulePriorityMasq
-	rule.Mark = masqMark
-	rule.Mask = masqMark
+	mask := uint32(masqMark)
+	rule.Mark = mask
+	rule.Mask = &mask
 	rule.Family = family
 	rule.Table = unix.RT_TABLE_MAIN
 	if err := netlink.RuleAdd(rule); err != nil {
