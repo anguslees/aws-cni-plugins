@@ -27,7 +27,7 @@ RUN pwd; find /build /out -type  f -ls
 RUN chown -R root:root /out
 RUN chmod -R u=rwX,go=rX /out
 
-FROM --platform=$BUILDPLATFORM debian:stable@sha256:5bdced7b0c02512895dd702dfc903f3249755de86f72ab86e12b514ca9e4505e AS cniplugins
+FROM --platform=$BUILDPLATFORM debian:stable@sha256:24bdca3f895f93debbbc436462524504ee902001e5f8925f43f090ccea48ffed AS cniplugins
 
 RUN \
     set -e; \
