@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/aws/aws-sdk-go v1.55.8
 	github.com/containernetworking/cni v1.3.0
-	github.com/containernetworking/plugins v1.8.0
+	github.com/containernetworking/plugins v1.9.0
 	github.com/coreos/go-iptables v0.8.0
 	github.com/golang/glog v1.2.5
 	github.com/google/go-jsonnet v0.21.0
